@@ -3,12 +3,12 @@ import { Grid, Typography } from '@mui/material';
 import ScoreCard from './components/ScoreCard';
 
 const sportsList = [
-    { key: 'fb_b', name: 'Football Boys' },
-    { key: 'fb_g', name: 'Football Girls' },
+    { key: 'fb_b', name: 'Volleyball Boys' },
+    { key: 'fb_g', name: 'Volleyball Girls' },
     { key: 'bb_b', name: 'Basketball Boys' },
     { key: 'bb_g', name: 'Basketball Girls' },
-    { key: 'vb_b', name: 'Volleyball Boys' },
-    { key: 'vb_g', name: 'Volleyball Girls' },
+    // { key: 'vb_b', name: 'Volleyball Boys' },
+    // { key: 'vb_g', name: 'Volleyball Girls' },
     { key: 'hk_b', name: 'Hockey Boys' },
     { key: 'hk_g', name: 'Hockey Girls' }
 ];
@@ -51,7 +51,7 @@ const Home = () => {
     return (
         <div>
             <Grid container spacing={2} sx={{ padding: '20px' }}>
-                {sportsList.map((sport, index) => (
+               {sportsList.map((sport, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                         {matches[sport.key] ? (
                             <ScoreCard 
@@ -71,6 +71,7 @@ const Home = () => {
                     </Grid>
                 ))}
             </Grid>
+      
         </div>
     );
 };
