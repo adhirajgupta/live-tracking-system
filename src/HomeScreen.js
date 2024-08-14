@@ -3,55 +3,61 @@ import { Grid, Typography } from '@mui/material';
 import ScoreCard from './components/ScoreCard';
 
 const sportsList = [
-    { key: 'fb_b', name: 'Volleyball Boys' },
-    { key: 'fb_g', name: 'Volleyball Girls' },
+    { key: 'vb_g', name: 'Volleyball Girls' },
     { key: 'bb_b', name: 'Basketball Boys' },
-    { key: 'bb_g', name: 'Basketball Girls' },
-    // { key: 'vb_b', name: 'Volleyball Boys' },
-    // { key: 'vb_g', name: 'Volleyball Girls' },
-    { key: 'hk_b', name: 'Hockey Boys' },
-    { key: 'hk_g', name: 'Hockey Girls' }
 ];
 
 const Home = () => {
     const [matches, setMatches] = useState({});
 
-    useEffect(() => {
-        const fetchMatchData = async (matchKey) => {
-            try {
-                const endpoint = `https://adityaiyer2k7.pythonanywhere.com/portal/getlive?matchid=${matchKey}`;
-                const response = await fetch(endpoint);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch data for ${matchKey}`);
-                }
-                const data = await response.json();
-                setMatches(prevMatches => ({
-                    ...prevMatches,
-                    [matchKey]: {
-                        school1: data.school1 || 'TBD',
-                        team1Logo: null, // Placeholder for team1 logo
-                        team1Score: data.data.team1score || '--',
-                        school2: data.school2 || 'TBD',
-                        team2Logo: null, // Placeholder for team2 logo
-                        team2Score: data.data.team2score || '--',
-                    }
-                }));
-            } catch (error) {
-                console.error(`Error fetching data for ${matchKey}: ${error.message}`);
+    const fetchMatchData = async (matchKey) => {
+        try {
+            const endpoint = `https://adityaiyer2k7.pythonanywhere.com/portal/getlive?matchid=${matchKey}`;
+            const response = await fetch(endpoint);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch data for ${matchKey}`);
             }
+            const data = await response.json();
+            console.log(data);
+            setMatches(prevMatches => ({
+                ...prevMatches,
+                [matchKey]: {
+                    school1: data.school1 || 'TBD',
+                    team1Logo: null, // Placeholder for team1 logo
+                    team1Score: data.data.team1score || '--',
+                    school2: data.school2 || 'TBD',
+                    team2Logo: null, // Placeholder for team2 logo
+                    team2Score: data.data.team2score || '--',
+                }
+            }));
+        } catch (error) {
+            console.error(`Error fetching data for ${matchKey}: ${error.message}`);
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = () => {
+            sportsList.forEach((sport, index) => {
+                setTimeout(() => {
+                    fetchMatchData(sport.key);
+                }, index * 5000); // Stagger the requests by 5 seconds
+            });
         };
 
-        sportsList.forEach((sport, index) => {
-            setTimeout(() => {
-                fetchMatchData(sport.key);
-            }, index * 5000); // Stagger the requests by 5 seconds
-        });
+        // Initial data fetch
+        fetchData();
+
+        // Set up interval to fetch data every 10 seconds
+        const intervalId = setInterval(fetchData, 10000);
+
+        // Clear the interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     return (
         <div>
             <Grid container spacing={2} sx={{ padding: '20px' }}>
-               {sportsList.map((sport, index) => (
+                {sportsList.map((sport, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                         {matches[sport.key] ? (
                             <ScoreCard 
@@ -71,7 +77,6 @@ const Home = () => {
                     </Grid>
                 ))}
             </Grid>
-      
         </div>
     );
 };
