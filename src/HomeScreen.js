@@ -37,18 +37,24 @@ const Home = () => {
 
     useEffect(() => {
         const fetchData = () => {
+
             sportsList.forEach((sport, index) => {
                 setTimeout(() => {
                     fetchMatchData(sport.key);
-                }, index * 5000); // Stagger the requests by 5 seconds
+                }, index); // Stagger the requests by 5 seconds
             });
+
         };
 
         // Initial data fetch
         fetchData();
 
         // Set up interval to fetch data every 10 seconds
-        const intervalId = setInterval(fetchData, 10000);
+        const intervalId = setInterval(() => {
+            fetchData()
+            window.location.href = "."
+        }, 30000);
+
 
         // Clear the interval on component unmount
         return () => clearInterval(intervalId);
@@ -60,7 +66,7 @@ const Home = () => {
                 {sportsList.map((sport, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                         {matches[sport.key] ? (
-                            <ScoreCard 
+                            <ScoreCard
                                 sport={sport.name}
                                 school1={matches[sport.key]?.school1 || 'TBD'}
                                 team1Logo={matches[sport.key]?.team1Logo || 'path/to/placeholder/logo.png'}
