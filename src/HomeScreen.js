@@ -54,6 +54,7 @@ const Home = () => {
             fetchData()
             window.location.href = "."
         }, 30000);
+        
 
 
         // Clear the interval on component unmount
